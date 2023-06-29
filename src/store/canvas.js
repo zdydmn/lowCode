@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { getOnlyKey } from '../utils/index'
 
 const defaultCanvas = {
@@ -13,6 +14,7 @@ const defaultCanvas = {
         boxSizing: "content-box",
     },
     // 画布中的组件值
+    //  cmps:[],
     cmps: [
         {
             key: getOnlyKey(),
@@ -30,26 +32,47 @@ const defaultCanvas = {
         },
     ],
 };
-
-
 class Canvas {
     constructor(_canvas = defaultCanvas) {
         this.canvas = _canvas
     }
 
+    // get
 
-    // get方法
-    getCanvas() {
-        return { ...this.canvas }
-    }
+    getCanvas = () => {
+        return { ...this.canvas };
+    };
 
-    // set方法
-    setCanvas(_canvas) {
-        Object.assign(this.canvas, _canvas)
-    }
+    getCanvasCmps = () => {
+        return [...this.canvas.cmps];
+    };
 
+    // set
+    setCanvas = (_canvas) => {
+        Object.assign(this.canvas, _canvas);
+    };
+
+    getPublicCanvas = () => {
+        const obj = {
+            getCanvas: this.getCanvas,
+            getCanvasCmps: this.getCanvasCmps,
+        };
+
+        return obj;
+    };
 }
 
-function useCanvas() {
+export function useCanvas(canvas) {
+    const canvasRef = useRef();
 
+    if (!canvasRef.current) {
+        if (canvas) {
+            canvasRef.current = canvas;
+        } else {
+            const canvas = new Canvas();
+            canvasRef.current = canvas.getPublicCanvas();
+        }
+    }
+
+    return canvasRef.current;
 }
