@@ -1,0 +1,36 @@
+.container {
+    padding: 16px;
+    width: 300px;
+    height: 100%;
+    border-right: 1px solid rgba(31, 28, 35, .08);
+
+    .titleContainer {
+        display: flex;
+        justify-content: space-between;
+
+        .titleFont {
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+
+    .componentsList {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+
+        .componentItem {
+            border: 1px solid #000;
+            width: 130px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+
+            &:hover {
+                cursor: pointer;
+                border-color: #1677ff;
+                color: #1677ff;
+            }
+        }
+    }
+}

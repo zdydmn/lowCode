@@ -1,44 +1,81 @@
-import { useRef } from 'react';
 import { getOnlyKey } from '../utils/index'
 
 const defaultCanvas = {
     // 画布样式
     style: {
-        width: 320,
-        height: 568,
-        backgroundColor: "#ffffff00",
-        backgroundImage: "",
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        boxSizing: "content-box",
+        // width: 320,
+        height: "100%",
+        padding: "10px",
+        backgroundColor: "#fff",
+        // backgroundImage: "",
+        // backgroundPosition: "center",
+        // backgroundSize: "cover",
+        // backgroundRepeat: "no-repeat",
+        // boxSizing: "content-box",
     },
     // 画布中的组件值
     //  cmps:[],
-    cmps: [
-        {
-            key: getOnlyKey(),
-            desc: "文本",
-            value: "文本",
-            style: {
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: 100,
-                height: 30,
-                fontSize: 12,
-                color: "red",
-            },
-        },
-    ],
+    cmps: [],
 };
-class Canvas {
+export default class Canvas {
     constructor(_canvas = defaultCanvas) {
         this.canvas = _canvas
+        this.listeners = []
+        // 被选中组件的下表
+        this.selectedCmpIndex = null;
+    }
+
+    getSelectedCmpIndex = () => {
+        return this.selectedCmpIndex
+    }
+    setSelectedCmpIndex = (index) => {
+        if (this.selectedCmpIndex === index) return
+        this.selectedCmpIndex = index
+        this.updateApp();
+    }
+
+    getSelectedCmp = () => {
+        const cmps = this.getCanvasCmps()
+        return cmps[this.selectedCmpIndex]
+    }
+
+    upDateSelectedCmpStyle = (newStyle = {}, newValue) => {
+        const SelectedCmp = this.getSelectedCmp()
+        Object.assign(this.canvas.cmps[this.getSelectedCmpIndex()], {
+            style: {
+                ...SelectedCmp.style, ...newStyle
+            }
+        })
+
+        this.updateApp();
+    }
+
+    //addCmp: 添加组件
+    addCmp = (_cmp) => {
+        // 1.更新画布
+        const cmp = {
+            key: getOnlyKey(),
+            ..._cmp
+        }
+        const ind = this.canvas.cmps.push(cmp)
+        // 2. 选中当前组件
+        this.selectedCmpIndex = ind - 1
+        // 2.更新组件
+        this.updateApp();
+    }
+
+    updateApp = () => {
+        this.listeners.forEach(lis => lis())
+    }
+
+    subscribe = (listener) => {
+        this.listeners.push(listener)
+        return () => {
+            this.listeners = this.listeners.filter(lis => lis !== listener)
+        }
     }
 
     // get
-
     getCanvas = () => {
         return { ...this.canvas };
     };
@@ -56,23 +93,10 @@ class Canvas {
         const obj = {
             getCanvas: this.getCanvas,
             getCanvasCmps: this.getCanvasCmps,
+            addCmp: this.addCmp,
+            subscribe: this.subscribe
         };
 
         return obj;
     };
-}
-
-export function useCanvas(canvas) {
-    const canvasRef = useRef();
-
-    if (!canvasRef.current) {
-        if (canvas) {
-            canvasRef.current = canvas;
-        } else {
-            const canvas = new Canvas();
-            canvasRef.current = canvas.getPublicCanvas();
-        }
-    }
-
-    return canvasRef.current;
 }
