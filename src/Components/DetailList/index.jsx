@@ -1,9 +1,10 @@
 import styles from './index.less';
+import { isText } from "../../Layout/Left";
 import { CloseOutlined } from '@ant-design/icons';
 import { useCanvasByContext } from '../../store/hooks'
 const defaultStyle = {
     position: "absolute",
-    top: 1,
+    top: 0,
     left: 0,
     width: 80,
     height: 30,
@@ -42,12 +43,12 @@ export default function DetailList({ closeDetail }) {
     }
     return <div className={styles.container}>
         <div className={styles.titleContainer}>
-            <div className={styles.titleFont}>组件库</div>
+            <div className={styles.titleFont}>文字</div>
             <CloseOutlined onClick={closeDetail} style={{ fontSize: "14px" }} />
         </div>
         <div className={styles.componentsList}>
             {settings.map((setting, index) => {
-                return <div key={index} className={styles.componentItem} onClick={() => { addCmp(setting) }}>{setting.value}</div>
+                return <div key={index} className={styles.componentItem} onClick={() => { addCmp({ ...setting, type: isText }) }}>{setting.value}</div>
             })}
         </div>
     </div>

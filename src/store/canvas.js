@@ -29,6 +29,7 @@ export default class Canvas {
         return this.selectedCmpIndex
     }
     setSelectedCmpIndex = (index) => {
+        console.log(index);
         if (this.selectedCmpIndex === index) return
         this.selectedCmpIndex = index
         this.updateApp();
@@ -94,7 +95,11 @@ export default class Canvas {
             getCanvas: this.getCanvas,
             getCanvasCmps: this.getCanvasCmps,
             addCmp: this.addCmp,
-            subscribe: this.subscribe
+            subscribe: this.subscribe,
+            getSelectedCmpIndex: this.getSelectedCmpIndex,
+            getSelectedCmp: this.getSelectedCmp,
+            setSelectedCmpIndex: this.setSelectedCmpIndex,
+            upDateSelectedCmpStyle: this.upDateSelectedCmpStyle
         };
 
         return obj;

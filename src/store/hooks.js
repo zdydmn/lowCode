@@ -20,6 +20,7 @@ export function useCanvasCmps() {
     return canvas.getCanvasCmps();
 }
 
+
 // 初始化canvas
 export function useCanvas(canvas) {
     const canvasRef = useRef();
